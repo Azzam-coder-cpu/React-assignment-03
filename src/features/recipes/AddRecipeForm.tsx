@@ -6,29 +6,20 @@ import { type AppDispatch } from "../../app/store";
 
 const AddRecipeForm = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   const [name, setName] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [instructions, setInstructions] = useState("");
   const [image, setImage] = useState("");
   const [category, setCategory] = useState("Main Course");
 
-  const generateId = () => {
-    return Date.now(); // unique number
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!name || !ingredients || !instructions) {
-      alert("⚠️ Please fill all required fields!");
-      return;
-    }
+    if (!name || !ingredients || !instructions) return;
 
     const newRecipe: Recipe = {
-      id: generateId(),
+      id: Date.now(),
       name,
-      ingredients: ingredients.split(",").map((ing) => ing.trim()),
+      ingredients: ingredients.split(",").map((i) => i.trim()),
       instructions,
       image,
       category,
@@ -36,72 +27,26 @@ const AddRecipeForm = () => {
 
     dispatch(addRecipe(newRecipe));
 
-    // reset form
-    setName("");
-    setIngredients("");
-    setInstructions("");
-    setImage("");
-    setCategory("Main Course");
+    // Reset form
+    setName(""); setIngredients(""); setInstructions(""); setImage(""); setCategory("Main Course");
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md space-y-4"
-    >
-      <h2 className="text-2xl font-bold text-center">➕ Add New Recipe</h2>
+    <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-4 rounded-lg shadow border space-y-2">
+      <h2 className="text-lg font-semibold text-gray-800 text-center">Add Recipe</h2>
 
-      <input
-        type="text"
-        placeholder="Recipe Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="w-full border rounded px-3 py-2"
-        required
-      />
-
-      <input
-        type="text"
-        placeholder="Ingredients (comma separated)"
-        value={ingredients}
-        onChange={(e) => setIngredients(e.target.value)}
-        className="w-full border rounded px-3 py-2"
-        required
-      />
-
-      <textarea
-        placeholder="Cooking Instructions"
-        value={instructions}
-        onChange={(e) => setInstructions(e.target.value)}
-        className="w-full border rounded px-3 py-2"
-        required
-      />
-
-      <input
-        type="text"
-        placeholder="Image URL (optional)"
-        value={image}
-        onChange={(e) => setImage(e.target.value)}
-        className="w-full border rounded px-3 py-2"
-      />
-
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="w-full border rounded px-3 py-2"
-      >
+      <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" className="w-full border px-2 py-1 text-sm rounded focus:ring focus:ring-blue-300" />
+      <input value={ingredients} onChange={(e) => setIngredients(e.target.value)} placeholder="Ingredients (comma separated)" className="w-full border px-2 py-1 text-sm rounded focus:ring focus:ring-blue-300" />
+      <textarea value={instructions} onChange={(e) => setInstructions(e.target.value)} placeholder="Instructions" rows={2} className="w-full border px-2 py-1 text-sm rounded focus:ring focus:ring-blue-300" />
+      <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="Image URL" className="w-full border px-2 py-1 text-sm rounded focus:ring focus:ring-blue-300" />
+      <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full border px-2 py-1 text-sm rounded focus:ring focus:ring-blue-300">
         <option>Main Course</option>
         <option>Snack</option>
         <option>Dessert</option>
         <option>Drink</option>
       </select>
 
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-      >
-        Save Recipe
-      </button>
+      <button type="submit" className="w-full bg-blue-600 text-white text-sm py-1.5 rounded hover:bg-blue-700">Save</button>
     </form>
   );
 };

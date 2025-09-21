@@ -13,24 +13,29 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <form onSubmit={handleLogin} className="p-6 bg-white shadow rounded w-80">
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <form
+        onSubmit={handleLogin}
+        className="w-96 p-8 bg-white shadow-lg rounded-2xl border border-gray-200"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          Login
+        </h2>
 
         <input
           type="text"
           placeholder="Email"
-          className="border p-2 mb-2 w-full"
+          className="border border-gray-300 p-3 mb-4 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="password"
           placeholder="Password"
-          className="border p-2 mb-2 w-full"
+          className="border border-gray-300 p-3 mb-6 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded mb-2"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200"
         >
           Login
         </button>
@@ -38,7 +43,7 @@ const Login = () => {
         <button
           type="button"
           onClick={() => navigate("/signup")}
-          className="w-full bg-gray-300 text-black p-2 rounded"
+          className="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 rounded-lg transition duration-200"
         >
           Go to Sign Up
         </button>
