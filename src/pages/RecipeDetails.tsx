@@ -5,17 +5,16 @@ import { deleteRecipe, type Recipe } from "../features/recipes/recipeSlice";
 import EditRecipeForm from "../features/recipes/EditRecipeForm";
 import { useState } from "react";
 
-function RecipeDetails() {
+function DetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [editing, setEditing] = useState(false);
 
-  const recipe = useSelector((state: RootState) =>
-    state.recipes.list.find((r) => r.id.toString() === id)
-  );
+  const recipes = useSelector((state: RootState) => state.recipes.list);
+  const item = recipes.find((r) => r.id.toString() === id);
 
-  if (!recipe) {
+  if (!item) {
     return (
       <p className="text-center text-red-600 font-medium mt-10">
         Recipe not found
@@ -24,61 +23,75 @@ function RecipeDetails() {
   }
 
   const handleDelete = () => {
-    dispatch(deleteRecipe(recipe.id));
-    navigate("/"); // redirect to home
+    dispatch(deleteRecipe(item.id));
+    navigate("/");
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-lg p-8 rounded-2xl mt-10 border border-gray-200">
-      {recipe.image && (
-        <img
-          src={recipe.image}
-          alt={recipe.name}
-          className="w-full h-64 object-cover rounded-lg mb-6"
-        />
+    <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-3xl mt-12 overflow-hidden border border-gray-200">
+      {item.image && (
+        <div className="relative">
+          <img
+            src={item.image}
+            alt={item.name}
+            className="w-full h-72 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          <h1 className="absolute bottom-4 left-6 text-3xl font-bold text-white drop-shadow-lg">
+            {item.name}
+          </h1>
+        </div>
       )}
-      <h1 className="text-3xl font-bold text-gray-800">{recipe.name}</h1>
-      <p className="text-gray-500 mt-1">{recipe.category}</p>
 
-      <h3 className="mt-6 font-semibold text-lg">Ingredients</h3>
-      <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
-        {recipe.ingredients.map((ing, i) => (
-          <li key={i}>{ing}</li>
-        ))}
-      </ul>
+      <div className="p-8">
+        {item.category && (
+          <p className="text-gray-500 font-medium mb-4">{item.category}</p>
+        )}
 
-      <h3 className="mt-6 font-semibold text-lg">Instructions</h3>
-      <p className="text-gray-700 mt-2 leading-relaxed">{recipe.instructions}</p>
+        {item.ingredients && (
+          <>
+            <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
+            <ul className="list-disc pl-6 mb-4 space-y-1 text-gray-700">
+              {item.ingredients.map((ing: string, i: number) => (
+                <li key={i}>{ing}</li>
+              ))}
+            </ul>
+          </>
+        )}
 
-      <div className="mt-6 flex gap-2">
-        <button
-          onClick={() => setEditing(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Edit Recipe
-        </button>
-        <button
-          onClick={handleDelete}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Delete Recipe
-        </button>
-        <button
-          onClick={() => navigate("/")}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-        >
-          Back
-        </button>
+        {item.instructions && (
+          <>
+            <h2 className="text-xl font-semibold mb-2">Instructions</h2>
+            <p className="text-gray-700 leading-relaxed">{item.instructions}</p>
+          </>
+        )}
+
+        <div className="mt-8 flex gap-4 flex-wrap">
+          <button
+            onClick={() => setEditing(true)}
+            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-2xl font-semibold transition"
+          >
+            Edit
+          </button>
+          <button
+            onClick={handleDelete}
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-2xl font-semibold transition"
+          >
+            Delete
+          </button>
+          <button
+            onClick={() => navigate("/")}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-2xl font-semibold transition"
+          >
+            Back
+          </button>
+        </div>
       </div>
 
-      {/* Edit modal */}
       {editing && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg">
-            <EditRecipeForm
-              recipe={recipe as Recipe}
-              onClose={() => setEditing(false)}
-            />
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg animate-fadeIn">
+            <EditRecipeForm recipe={item as Recipe} onClose={() => setEditing(false)} />
           </div>
         </div>
       )}
@@ -86,4 +99,4 @@ function RecipeDetails() {
   );
 }
 
-export default RecipeDetails;
+export default DetailsPage;
